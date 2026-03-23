@@ -1,1 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>People Walking Away</title>
+  <meta name="description" content="A cinematic one-page landing page with bilingual support and light/dark mode." />
+  <style>
+    :root {
+      --bg: #f6f5f2;
+      --bg-elevated: rgba(255, 255, 255, 0.72);
+      --text: #111111;
+      --muted: #5a5a5a;
+      --border: rgba(0, 0, 0, 0.08);
+      --shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+      --accent: #1f6feb;
+      --button-bg: rgba(255, 255, 255, 0.88);
+      --button-text: #111111;
+      --hero-overlay:
+        linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(246,245,242,0.45) 58%, rgba(246,245,242,0.95) 100%);
+    }
 
+    body.dark {
+      --bg: #0f1115;
+      --bg-elevated: rgba(18, 22, 29, 0.74);
+      --text: #f5f7fa;
+      --muted: #b8c1cc;
+      --border: rgba(255, 255, 255, 0.08);
+      --shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+      --accent: #8bb8ff;
+      --button-bg: rgba(26, 31, 40, 0.9);
+      --button-text: #f5f7fa;
+      --hero-overlay:
+        linear-gradient(180deg, rgba(15,17,21,0.12) 0%, rgba(15,17,21,0.52) 58%, rgba(15,17,21,0.96) 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR",
+        "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background 0.35s ease, color 0.35s ease;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img, video {
+      display: block;
+      max-width: 100%;
+    }
+
+    .container {
+      width: min(1140px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    /* Top controls */
+    .controls {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 1000;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      border: 1px solid var(--border);
+      background: var(--button-bg);
+      color: var(--button-text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 700;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, background 0.3s ease, color 0.3s ease;
+    }
+
+    .control-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      isolation: isolate;
+    }
+
+    .hero-media {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      overflow: hidden;
+    }
+
+    .hero-media video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.05) contrast(1.02);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: var(--hero-overlay);
+      transition: background 0.35s ease;
+    }
+
+    .hero-content {
+      padding: 120px 0 80px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+
+    h1 {
+      font-size: clamp(2.7rem, 6vw, 6.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      max-width: 950px;
+      margin-bottom: 18px;
+    }
+
+    .hero-description {
+      max-width: 760px;
+      font-size: clamp(1rem, 2vw, 1.28rem);
+      color: var(--muted);
+      margin-bottom: 30px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 150px;
+      padding: 14px 20px;
+      border-radius: 16px;
+      font-weight: 800;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .btn-secondary {
+      background: var(--bg-elevated);
+      color: var(--text);
+      border-color: var(--border);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .hero-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      max-width: 860px;
+    }
+
+    .mini-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .mini-card strong {
+      display: block;
+      font-size: 1.45rem;
+      margin-bottom: 4px;
+    }
+
+    .mini-card span {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Generic section */
+    section {
+      padding: 84px 0;
+    }
+
+    .section-head {
+      margin-bottom: 28px;
+    }
+
+    .section-kicker {
+      color: var(--accent);
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+
+    .section-subtitle {
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    /* Features */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+    }
+
+    .card p {
+      color: var(--muted);
+    }
+
+    /* Video showcase */
+    .showcase {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .video-frame {
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      box-shadow: var(--shadow);
+    }
+
+    .video-frame video {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .info-box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .info-box p {
+      color: var(--muted);
+    }
+
+    .info-box ul {
+      list-style: none;
+      margin-top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .info-box li {
+      position: relative;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .info-box li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.7em;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      transform: translateY(-50%);
+    }
+
+    /* CTA */
+    .cta-wrap {
+      text-align: center;
+    }
+
+    .cta-box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      padding: 38px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .cta-box p {
+      color: var(--muted);
+      max-width: 720px;
+      margin: 12px auto 24px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 28px 0 40px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+    }
+
+    /* Reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 980px) {
+      .hero-cards,
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .showcase {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .controls {
+        top: 12px;
+        right: 12px;
+        left: 12px;
+        justify-content: flex-end;
+      }
+
+      .control-btn {
+        padding: 9px 12px;
+        font-size: 0.85rem;
+      }
+
+      .hero-content {
+        padding-top: 110px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .cta-box {
+        padding: 28px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Controls -->
+  <div class="controls">
+    <button id="langToggle" class="control-btn" aria-label="Toggle language">한국어</button>
+    <button id="themeToggle" class="control-btn" aria-label="Toggle theme">🌙 Dark</button>
+  </div>
+
+  <!-- Hero -->
+  <header class="hero" id="top">
+    <div class="hero-media">
+      <video autoplay muted loop playsinline preload="auto" aria-label="People Walking Away background video">
+        <source src="Asset/video.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="hero-overlay"></div>
+
+    <div class="container hero-content">
+      <div class="eyebrow reveal" data-i18n="eyebrow">A visual story in motion</div>
+      <h1 class="reveal" data-i18n="heroTitle">Every ending is the start of somewhere new.</h1>
+      <p class="hero-description reveal" data-i18n="heroDesc">
+        “People Walking Away” captures the quiet beauty of movement, distance, and change—turned into a calm, cinematic landing page designed to feel elegant on every screen.
+      </p>
+
+      <div class="hero-actions reveal">
+        <a href="#experience" class="btn btn-primary" data-i18n="heroBtn1">Explore</a>
+        <a href="#video-section" class="btn btn-secondary" data-i18n="heroBtn2">Watch Video</a>
+      </div>
+
+      <div class="hero-cards reveal">
+        <div class="mini-card">
+          <strong data-i18n="stat1Num">01</strong>
+          <span data-i18n="stat1Text">Single-page experience</span>
+        </div>
+        <div class="mini-card">
+          <strong data-i18n="stat2Num">EN / KR</strong>
+          <span data-i18n="stat2Text">Built-in language toggle</span>
+        </div>
+        <div class="mini-card">
+          <strong data-i18n="stat3Num">Light / Dark</strong>
+          <span data-i18n="stat3Text">Adaptive viewing mode</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Experience -->
+  <section id="experience">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-kicker" data-i18n="expKicker">Experience</div>
+        <h2 class="section-title" data-i18n="expTitle">Simple, cinematic, and designed to leave an impression.</h2>
+        <p class="section-subtitle" data-i18n="expSubtitle">
+          This one-page layout uses motion, typography, and atmosphere to create a polished presentation that feels modern, minimal, and easy to publish.
+        </p>
+      </div>
+
+      <div class="features">
+        <div class="card reveal">
+          <h3 data-i18n="card1Title">Immersive First Look</h3>
+          <p data-i18n="card1Desc">
+            A full-screen hero video creates immediate emotional impact and establishes the tone of the page in seconds.
+          </p>
+        </div>
+
+        <div class="card reveal">
+          <h3 data-i18n="card2Title">Bilingual by Default</h3>
+          <p data-i18n="card2Desc">
+            Switch between English and Korean instantly so your page feels accessible and natural for more viewers.
+          </p>
+        </div>
+
+        <div class="card reveal">
+          <h3 data-i18n="card3Title">Mood-Sensitive Design</h3>
+          <p data-i18n="card3Desc">
+            Light and dark mode let the page feel airy and bright, or cinematic and intimate depending on preference.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video Section -->
+  <section id="video-section">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="section-kicker" data-i18n="videoKicker">Featured Video</div>
+        <h2 class="section-title" data-i18n="videoTitle">People Walking Away</h2>
+        <p class="section-subtitle" data-i18n="videoSubtitle">
+          A quiet visual moment that suggests distance, transition, and possibility—kept at the center of the experience.
+        </p>
+      </div>
+
+      <div class="showcase">
+        <div class="video-frame reveal">
+          <video controls playsinline preload="metadata" aria-label="People Walking Away featured video">
+            <source src="Asset/video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+
+        <div class="info-box reveal">
+          <h3 data-i18n="panelTitle">Why this page works</h3>
+          <p data-i18n="panelDesc">
+            It keeps the focus on the footage while using clean layout, readable overlays, and smooth interactions to make the overall presentation feel intentional and refined.
+          </p>
+          <ul>
+            <li data-i18n="bullet1">Responsive layout for desktop and mobile</li>
+            <li data-i18n="bullet2">Readable text over video with soft contrast overlays</li>
+            <li data-i18n="bullet3">Built-in language and theme controls</li>
+            <li data-i18n="bullet4">Easy static hosting with GitHub Pages</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="publish">
+    <div class="container cta-wrap">
+      <div class="cta-box reveal">
+        <div class="section-kicker" data-i18n="ctaKicker">Publish</div>
+        <h2 class="section-title" data-i18n="ctaTitle">Ready to launch on GitHub Pages?</h2>
+        <p data-i18n="ctaDesc">
+          Upload this file as <strong>index.html</strong>, keep your video at <strong>Asset/video.mp4</strong>, add an empty <strong>.nojekyll</strong> file, and publish from your main branch.
+        </p>
+        <a href="#top" class="btn btn-primary" data-i18n="ctaBtn">Back to Top</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-inner">
+      <div data-i18n="footerLeft">People Walking Away • One-page landing page</div>
+      <div data-i18n="footerRight">GitHub Pages • HTML / CSS / JavaScript</div>
+    </div>
+  </footer>
+
+  <script>
+    const translations = {
+      en: {
+        eyebrow: "A visual story in motion",
+        heroTitle: "Every ending is the start of somewhere new.",
+        heroDesc:
+          "“People Walking Away” captures the quiet beauty of movement, distance, and change—turned into a calm, cinematic landing page designed to feel elegant on every screen.",
+        heroBtn1: "Explore",
+        heroBtn2: "Watch Video",
+        stat1Num: "01",
+        stat1Text: "Single-page experience",
+        stat2Num: "EN / KR",
+        stat2Text: "Built-in language toggle",
+        stat3Num: "Light / Dark",
+        stat3Text: "Adaptive viewing mode",
+
+        expKicker: "Experience",
+        expTitle: "Simple, cinematic, and designed to leave an impression.",
+        expSubtitle:
+          "This one-page layout uses motion, typography, and atmosphere to create a polished presentation that feels modern, minimal, and easy to publish.",
+
+        card1Title: "Immersive First Look",
+        card1Desc:
+          "A full-screen hero video creates immediate emotional impact and establishes the tone of the page in seconds.",
+        card2Title: "Bilingual by Default",
+        card2Desc:
+          "Switch between English and Korean instantly so your page feels accessible and natural for more viewers.",
+        card3Title: "Mood-Sensitive Design",
+        card3Desc:
+          "Light and dark mode let the page feel airy and bright, or cinematic and intimate depending on preference.",
+
+        videoKicker: "Featured Video",
+        videoTitle: "People Walking Away",
+        videoSubtitle:
+          "A quiet visual moment that suggests distance, transition, and possibility—kept at the center of the experience.",
+
+        panelTitle: "Why this page works",
+        panelDesc:
+          "It keeps the focus on the footage while using clean layout, readable overlays, and smooth interactions to make the overall presentation feel intentional and refined.",
+        bullet1: "Responsive layout for desktop and mobile",
+        bullet2: "Readable text over video with soft contrast overlays",
+        bullet3: "Built-in language and theme controls",
+        bullet4: "Easy static hosting with GitHub Pages",
+
+        ctaKicker: "Publish",
+        ctaTitle: "Ready to launch on GitHub Pages?",
+        ctaDesc:
+          'Upload this file as <strong>index.html</strong>, keep your video at <strong>Asset/video.mp4</strong>, add an empty <strong>.nojekyll</strong> file, and publish from your main branch.',
+        ctaBtn: "Back to Top",
+
+        footerLeft: "People Walking Away • One-page landing page",
+        footerRight: "GitHub Pages • HTML / CSS / JavaScript"
+      },
+
+      ko: {
+        eyebrow: "움직임으로 전하는 시각적 이야기",
+        heroTitle: "모든 끝은, 새로운 시작이 된다.",
+        heroDesc:
+          "“People Walking Away”는 움직임, 거리감, 변화의 고요한 아름다움을 담아낸 장면을 바탕으로, 어떤 화면에서도 세련되게 보이는 차분하고 시네마틱한 랜딩 페이지로 구성되었습니다.",
+        heroBtn1: "둘러보기",
+        heroBtn2: "영상 보기",
+        stat1Num: "01",
+        stat1Text: "원페이지 경험",
+        stat2Num: "EN / KR",
+        stat2Text: "언어 전환 기능 내장",
+        stat3Num: "Light / Dark",
+        stat3Text: "테마 전환 지원",
+
+        expKicker: "경험",
+        expTitle: "단순하지만 인상적이고, 영화 같은 분위기로.",
+        expSubtitle:
+          "이 원페이지 레이아웃은 영상, 타이포그래피, 분위기를 조화롭게 활용해 현대적이고 미니멀하며 게시하기 쉬운 구성을 제공합니다.",
+
+        card1Title: "몰입감 있는 첫인상",
+        card1Desc:
+          "전체 화면 히어로 영상이 첫 순간부터 감정적인 인상을 만들고 페이지의 분위기를 빠르게 설정합니다.",
+        card2Title: "기본 이중 언어 지원",
+        card2Desc:
+          "영어와 한국어를 즉시 전환할 수 있어 더 많은 사용자에게 자연스럽고 친숙한 경험을 제공합니다.",
+        card3Title: "분위기에 맞는 디자인",
+        card3Desc:
+          "라이트/다크 모드를 통해 밝고 가벼운 느낌 또는 더 시네마틱하고 깊이 있는 분위기를 선택할 수 있습니다.",
+
+        videoKicker: "대표 영상",
+        videoTitle: "People Walking Away",
+        videoSubtitle:
+          "거리감, 전환, 가능성을 떠올리게 하는 조용한 장면을 페이지의 중심에 배치했습니다.",
+
+        panelTitle: "이 페이지가 잘 작동하는 이유",
+        panelDesc:
+          "영상 자체에 집중하면서도 깔끔한 레이아웃, 읽기 쉬운 오버레이, 부드러운 인터랙션으로 전체 인상을 정돈되고 세련되게 만들어 줍니다.",
+        bullet1: "데스크톱과 모바일 모두 대응하는 반응형 레이아웃",
+        bullet2: "부드러운 대비 오버레이로 영상 위 텍스트 가독성 확보",
+        bullet3: "언어 및 테마 전환 기능 기본 제공",
+        bullet4: "GitHub Pages 정적 호스팅에 적합",
+
+        ctaKicker: "게시",
+        ctaTitle: "GitHub Pages에 바로 올릴 준비가 되었나요?",
+        ctaDesc:
+          '<strong>index.html</strong>로 업로드하고, 영상을 <strong>Asset/video.mp4</strong> 경로에 두고, 빈 <strong>.nojekyll</strong> 파일을 추가한 뒤 main 브랜치에서 게시하면 됩니다.',
+        ctaBtn: "맨 위로",
+
+        footerLeft: "People Walking Away • 원페이지 랜딩 페이지",
+        footerRight: "GitHub Pages • HTML / CSS / JavaScript"
+      }
+    };
+
+    const langToggle = document.getElementById("langToggle");
+    const themeToggle = document.getElementById("themeToggle");
+
+    let currentLang = localStorage.getItem("site-lang") || "en";
+    let currentTheme = localStorage.getItem("site-theme");
+
+    if (!currentTheme) {
+      currentTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+
+    function applyLanguage(lang) {
+      document.documentElement.lang = lang;
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[lang] && translations[lang][key] !== undefined) {
+          el.innerHTML = translations[lang][key];
+        }
+      });
+
+      langToggle.textContent = lang === "en" ? "한국어" : "English";
+      localStorage.setItem("site-lang", lang);
+      currentLang = lang;
+    }
+
+    function applyTheme(theme) {
+      if (theme === "dark") {
+        document.body.classList.add("dark");
+        themeToggle.textContent = "☀️ Light";
+      } else {
+        document.body.classList.remove("dark");
+        themeToggle.textContent = "🌙 Dark";
+      }
+
+      localStorage.setItem("site-theme", theme);
+      currentTheme = theme;
+    }
+
+    langToggle.addEventListener("click", () => {
+      applyLanguage(currentLang === "en" ? "ko" : "en");
+    });
+
+    themeToggle.addEventListener("click", () => {
+      applyTheme(currentTheme === "light" ? "dark" : "light");
+    });
+
+    // Scroll reveal
+    const revealElements = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    revealElements.forEach((el) => observer.observe(el));
+
+    applyLanguage(currentLang);
+    applyTheme(currentTheme);
+  </script>
+</body>
+</html>
